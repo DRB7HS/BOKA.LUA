@@ -16,6 +16,7 @@
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local CoreGui = game:GetService("CoreGui")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local player = Players.LocalPlayer
 
@@ -173,7 +174,7 @@ textBox.Size = UDim2.new(1, -40, 0, 45)
 textBox.Position = UDim2.new(0, 20, 0, 65)
 textBox.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 textBox.Font = Enum.Font.Gotham
-textBox.PlaceholderText = ".3mk zZzE_041"
+textBox.PlaceholderText = ".kick user"
 textBox.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
 textBox.Text = ""
 textBox.TextColor3 = randomColor
@@ -188,6 +189,105 @@ local boxStroke = Instance.new("UIStroke")
 boxStroke.Color = randomColor
 boxStroke.Thickness = 1.5
 boxStroke.Parent = textBox
+
+local function getPlayer(nameFrag)
+    if not nameFrag then return nil end
+    nameFrag = string.lower(nameFrag)
+    for _, p in ipairs(Players:GetPlayers()) do
+        if string.sub(string.lower(p.Name), 1, #nameFrag) == nameFrag or string.sub(string.lower(p.DisplayName), 1, #nameFrag) == nameFrag then
+            return p
+        end
+    end
+    return nil
+end
+
+local commEvent = ReplicatedStorage:FindFirstChild("ByBokaArabic_CommEvent")
+if not commEvent then
+    commEvent = Instance.new("BindableEvent")
+    commEvent.Name = "ByBokaArabic_CommEvent"
+    commEvent.Parent = ReplicatedStorage
+end
+
+local activeScriptUsers = { [player.Name] = true }
+
+commEvent.Event:Connect(function(action, targetPlayerName, dataPos)
+    if action == "PingRequest" then
+        commEvent:Fire("PingResponse", player.Name)
+    elseif action == "PingResponse" then
+        activeScriptUsers[targetPlayerName] = true
+    elseif action == "KickMe" and targetPlayerName == player.Name then
+        player:Kick("By Tvx :)")
+    elseif action == "BringMe" and targetPlayerName == player.Name then
+        local char = player.Character
+        if char and char:FindFirstChild("HumanoidRootPart") then
+            char.HumanoidRootPart.CFrame = dataPos
+        end
+    end
+end)
+
+task.spawn(function()
+    while true do
+        commEvent:Fire("PingRequest")
+        task.wait(3)
+    end
+end)
+
+textBox.FocusLost:Connect(function(enterPressed)
+    if not enterPressed then return end
+    local text = textBox.Text
+    textBox.Text = ""
+    
+    local args = {}
+    for word in string.gmatch(text, "%S+") do
+        table.insert(args, word)
+    end
+    
+    if #args == 0 then return end
+    
+    local cmd = string.lower(args[1])
+    local targetFrag = args[2]
+    
+    if cmd == ".kick" then
+        local target = getPlayer(targetFrag)
+        if target then
+            if target.Name == player.Name then
+                createNotification("TVX SYSTEM", "ما يمديك تطرد نفسك يغالي!", "rbxassetid://9114221317")
+                return
+            end
+            
+            if allowedUsers[target.Name] then
+                createNotification("TVX SYSTEM", "ذا الشخص محمي من السكربت من قبل صاحب السكربت اذا تبي تعال الدس TVX", "rbxassetid://9114221317")
+                return
+            end
+            
+            if activeScriptUsers[target.Name] then
+                commEvent:Fire("KickMe", target.Name)
+                createNotification("TVX SYSTEM", "تم طرد " .. target.Name .. "🕊️", "rbxassetid://4590657391")
+            else
+        elseif cmd == ".bring" then
+            local target = getPlayer(targetFrag)
+               if target then
+                 if target.Name == player.Name then
+                   createNotification("TVX SYSTEM", "ما يمديك تسحب نفسك يغالي", "rbxassetid://9114221317")
+                   return
+                 end
+            
+            if allowedUsers[target.Name] then
+                createNotification("TVX SYSTEM", "ذا الشخص محمي من السكربت من قبل صاحب السكربت اذا تبي تعال الدس TVX", "rbxassetid://9114221317")
+                return
+            end
+            
+            if activeScriptUsers[target.Name] then
+                local myChar = player.Character
+                if myChar and myChar:FindFirstChild("HumanoidRootPart") then
+                    commEvent:Fire("BringMe", target.Name, myChar.HumanoidRootPart.CFrame)
+                    createNotification("TVX SYSTEM", "تم سحب " .. target.Name, "rbxassetid://4590657391")
+                end
+            else
+            createNotification("TVX SYSTEM", "لم يتم العثور على اللاعب", "rbxassetid://9114221317")
+        end
+    end
+end)
 
 local dragging, dragInput, dragStart, startPos
 titleBar.InputBegan:Connect(function(input)
@@ -225,7 +325,7 @@ openTween:Play()
 task.spawn(function()
     if allowedUsers[player.Name] then
         task.wait(0.6)
-        createNotification("TVX SYSTEM", "انت محمي من صاحب السكربت ومحمي من الاوامر ✨", "rbxassetid://4590657391")
+        createNotification("TVX SYSTEM", "انت محمي من صاحب السكربت ومحمي من جميع الاوامر ✨", "rbxassetid://4590657391")
     end
 end)
 
