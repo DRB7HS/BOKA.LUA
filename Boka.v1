@@ -1,4 +1,18 @@
--- ByBokaArabic
+--[[                              
+                                           .·´`·.
+                               .·´`·´`´     ·´.`
+                          ..·´                '..
+                      .·´,·´        . .  ::::::::`·.
+                  .·´`·´        .·´,.`. `·.. ::::::: `·..
+              .·´           .·´.  /..´.·` .` .:::::::::  `·.
+          .·´           .·´ .'. `·-·´ . ´  `  .`·.::::::::.·´.'
+      .·´           . ´ .·´     `·-·´          `·.`·.,.·´.·´
+  .·´           . ´ .·´         TVX BOOM!         `·.'.·´
+ I,.`.,     .·´  ·´
+  `·..·` ·´ .·´
+      ` ·' ´
+
+]]
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local CoreGui = game:GetService("CoreGui")
