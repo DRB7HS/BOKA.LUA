@@ -1,0 +1,242 @@
+-- ByBokaArabic
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local CoreGui = game:GetService("CoreGui")
+
+local player = Players.LocalPlayer
+
+local allowedUsers = {
+    ["zZzE_041"] = true,
+    ["VipDizrt"] = true,
+    ["Mbark450"] = true,
+}
+
+local pinkColors = {
+    Color3.fromRGB(255, 182, 193),
+    Color3.fromRGB(255, 105, 180),
+    Color3.fromRGB(255, 20, 147),
+    Color3.fromRGB(219, 112, 147),
+    Color3.fromRGB(255, 192, 203),
+    Color3.fromRGB(238, 130, 238),
+    Color3.fromRGB(221, 160, 221),
+    Color3.fromRGB(218, 112, 214),
+    Color3.fromRGB(186, 85, 211),
+    Color3.fromRGB(147, 112, 219),
+    Color3.fromRGB(255, 110, 180),
+    Color3.fromRGB(255, 140, 190),
+    Color3.fromRGB(240, 128, 128),
+    Color3.fromRGB(255, 160, 122),
+    Color3.fromRGB(255, 107, 129),
+}
+
+local randomColor = pinkColors[math.random(1, #pinkColors)]
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "CmdBarGUI"
+screenGui.IgnoreGuiInset = true
+screenGui.ResetOnSpawn = false
+pcall(function()
+    screenGui.Parent = CoreGui
+end)
+if not screenGui.Parent then
+    screenGui.Parent = player:WaitForChild("PlayerGui")
+end
+
+local function createNotification(title, text, soundId)
+    local notif = Instance.new("Frame")
+    notif.Size = UDim2.new(0, 300, 0, 70)
+    notif.Position = UDim2.new(1, 310, 0.8, 0)
+    notif.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    notif.BorderSizePixel = 0
+    notif.Parent = screenGui
+
+    local notifCorner = Instance.new("UICorner")
+    notifCorner.CornerRadius = UDim.new(0, 8)
+    notifCorner.Parent = notif
+
+    local notifStroke = Instance.new("UIStroke")
+    notifStroke.Color = randomColor
+    notifStroke.Thickness = 2
+    notifStroke.Parent = notif
+
+    local titleLabel = Instance.new("TextLabel")
+    titleLabel.Size = UDim2.new(1, -20, 0, 25)
+    titleLabel.Position = UDim2.new(0, 10, 0, 5)
+    titleLabel.BackgroundTransparency = 1
+    titleLabel.Font = Enum.Font.GothamBold
+    titleLabel.Text = title
+    titleLabel.TextColor3 = randomColor
+    titleLabel.TextSize = 14
+    titleLabel.TextXAlignment = Enum.TextXAlignment.Right
+    titleLabel.Parent = notif
+
+    local textLabel = Instance.new("TextLabel")
+    textLabel.Size = UDim2.new(1, -20, 0, 35)
+    textLabel.Position = UDim2.new(0, 10, 0, 30)
+    textLabel.BackgroundTransparency = 1
+    textLabel.Font = Enum.Font.Gotham
+    textLabel.Text = text
+    textLabel.TextColor3 = randomColor
+    textLabel.TextSize = 12
+    textLabel.TextWrapped = true
+    textLabel.TextXAlignment = Enum.TextXAlignment.Right
+    textLabel.Parent = notif
+
+    local sound = Instance.new("Sound")
+    sound.SoundId = soundId
+    sound.Volume = 1
+    sound.Parent = notif
+    sound:Play()
+
+    local tweenIn = TweenService:Create(notif, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Position = UDim2.new(1, -315, 0.8, 0)})
+    tweenIn:Play()
+
+    task.delay(4, function()
+        local tweenOut = TweenService:Create(notif, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.In), {Position = UDim2.new(1, 310, 0.8, 0)})
+        tweenOut:Play()
+        tweenOut.Completed:Connect(function()
+            notif:Destroy()
+        end)
+    end)
+end
+
+local mainFrame = Instance.new("Frame")
+mainFrame.Size = UDim2.new(0, 0, 0, 0)
+mainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+mainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+mainFrame.BorderSizePixel = 0
+mainFrame.ClipsDescendants = true
+mainFrame.Parent = screenGui
+
+local frameCorner = Instance.new("UICorner")
+frameCorner.CornerRadius = UDim.new(0, 12)
+frameCorner.Parent = mainFrame
+
+local frameStroke = Instance.new("UIStroke")
+frameStroke.Color = randomColor
+frameStroke.Thickness = 2
+frameStroke.Parent = mainFrame
+
+local closeBtn = Instance.new("TextButton")
+closeBtn.Size = UDim2.new(0, 35, 0, 35)
+closeBtn.Position = UDim2.new(0, 10, 0, 10)
+closeBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+closeBtn.Font = Enum.Font.GothamBold
+closeBtn.Text = "🫯"
+closeBtn.TextColor3 = randomColor
+closeBtn.TextSize = 16
+closeBtn.Parent = mainFrame
+
+local btnCorner = Instance.new("UICorner")
+btnCorner.CornerRadius = UDim.new(0, 8)
+btnCorner.Parent = closeBtn
+
+local btnStroke = Instance.new("UIStroke")
+btnStroke.Color = randomColor
+btnStroke.Thickness = 1.5
+btnStroke.Parent = closeBtn
+
+closeBtn.MouseButton1Click:Connect(function()
+    local tw = TweenService:Create(mainFrame, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.In), {Size = UDim2.new(0, 0, 0, 0), Position = UDim2.new(0.5, 0, 0.5, 0)})
+    tw:Play()
+    tw.Completed:Connect(function()
+        screenGui:Destroy()
+    end)
+end)
+
+local titleBar = Instance.new("TextLabel")
+titleBar.Size = UDim2.new(1, -60, 0, 50)
+titleBar.Position = UDim2.new(0, 50, 0, 5)
+titleBar.BackgroundTransparency = 1
+titleBar.Font = Enum.Font.GothamBold
+titleBar.Text = "CmdBar - اوامر الخاصة"
+titleBar.TextColor3 = randomColor
+titleBar.TextSize = 18
+titleBar.Parent = mainFrame
+
+local textBox = Instance.new("TextBox")
+textBox.Size = UDim2.new(1, -40, 0, 45)
+textBox.Position = UDim2.new(0, 20, 0, 65)
+textBox.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+textBox.Font = Enum.Font.Gotham
+textBox.PlaceholderText = ".3mk zZzE_041"
+textBox.PlaceholderColor3 = Color3.fromRGB(150, 150, 150)
+textBox.Text = ""
+textBox.TextColor3 = randomColor
+textBox.TextSize = 14
+textBox.Parent = mainFrame
+
+local boxCorner = Instance.new("UICorner")
+boxCorner.CornerRadius = UDim.new(0, 8)
+boxCorner.Parent = textBox
+
+local boxStroke = Instance.new("UIStroke")
+boxStroke.Color = randomColor
+boxStroke.Thickness = 1.5
+boxStroke.Parent = textBox
+
+local dragging, dragInput, dragStart, startPos
+titleBar.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = mainFrame.Position
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+titleBar.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        dragInput = input
+    end
+end)
+
+game:GetService("UserInputService").InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        local delta = input.Position - dragStart
+        mainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+end)
+
+local openTween = TweenService:Create(mainFrame, TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out), {
+    Size = UDim2.new(0, 400, 0, 130),
+    Position = UDim2.new(0.5, -200, 0.5, -65)
+})
+openTween:Play()
+
+task.spawn(function()
+    if allowedUsers[player.Name] then
+        task.wait(0.6)
+        createNotification("TVX SYSTEM", "انت محمي من صاحب السكربت ومحمي من الاوامر ✨", "rbxassetid://4590657391")
+    end
+end)
+
+for _, p in ipairs(Players:GetPlayers()) do
+    p.Chatted:Connect(function(msg)
+        for targetName, _ in pairs(allowedUsers) do
+            if string.find(string.lower(msg), string.lower(targetName)) then
+                if player.Name ~= targetName then
+                    createNotification("TVX SYSTEM", "ذا الشخص محمي من السكربت من قبل صاحب السكربت اذا تبي تعال الدس TVX", "rbxassetid://9114221317")
+                end
+                break
+            end
+        end
+    end)
+end
+
+Players.PlayerAdded:Connect(function(newPlayer)
+    newPlayer.Chatted:Connect(function(msg)
+        for targetName, _ in pairs(allowedUsers) do
+            if string.find(string.lower(msg), string.lower(targetName)) then
+                if player.Name ~= targetName then
+                    createNotification("TVX SYSTEM", "ذا الشخص محمي من السكربت من قبل صاحب السكربت اذا تبي تعال الدس TVX", "rbxassetid://9114221317")
+                end
+                break
+            end
+        end
+    end)
+end)
